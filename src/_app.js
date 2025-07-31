@@ -11,6 +11,8 @@ const mainRoutes = require("./routes/index.js")
 const dataSource = require("../Infrastructure/postgres.js")
 const { logger } = require("../Infrastructure/logger.js")
 dotenv.config();
+console.log(">>> DB_NAME:", process.env.DB_NAME);
+
 
 const serverInitializer = async () => {
     const app = fastify({ logger: true });

@@ -1,18 +1,18 @@
 const { EntitySchema } = require('typeorm');
 
 module.exports = new EntitySchema({
+    name: 'RateUs',
+    tableName: 'rate_us',
     target: 'RateUs',
-    name: 'rate-us',
-    tableName: 'rate-us',
     columns: {
         id: {
             primary: true,
             type: 'uuid',
             generated: 'uuid',
-            default: () => 'uuid_generate_v4()',
+            default: () => 'uuid_generate_v4()', // Requires extension
         },
         stars: {
-            type: 'varchar',
+            type: 'int',
             nullable: false,
         },
         createdAt: {
@@ -24,5 +24,4 @@ module.exports = new EntitySchema({
             default: false,
         },
     },
-
 });

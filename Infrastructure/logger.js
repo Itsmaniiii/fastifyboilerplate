@@ -4,9 +4,9 @@ const pretty = require('pino-pretty')
 const { AbstractLogger, QueryRunner } = require('typeorm');
 
 const stream = pretty({
-  colorize: true, // colorize output
-  levelFirst: false, // log level comes first
-  // translateTime: 'SYS:standard', // translate timestamp to readable format
+  colorize: true,
+  levelFirst: false, 
+  
 })
 const logger = pino(stream)
 
