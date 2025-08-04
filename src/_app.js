@@ -8,7 +8,8 @@ const dotenv = require('dotenv');
 const swaggerUiObject = require('../Infrastructure/swaggerUiObject.js');
 const swaggerObject = require('../Infrastructure/swaggerObject.js');
 const mainRoutes = require("./routes/index.js")
-const dataSource = require("../Infrastructure/postgres.js")
+const userRoutes = require('./routes/userRoutes');
+const dataSource = require('../Infrastructure/postgres'); 
 const { logger } = require("../Infrastructure/logger.js")
 dotenv.config();
 console.log(">>> DB_NAME:", process.env.DB_NAME);
@@ -31,9 +32,12 @@ const serverInitializer = async () => {
             message: 'Fastify server is running',
         });
     });
+    
 
     // Register Routes
     mainRoutes(app)
+    app.register(userRoutes, { prefix: '/users' });
+
 
     // Database Initialization and Server Start
 
