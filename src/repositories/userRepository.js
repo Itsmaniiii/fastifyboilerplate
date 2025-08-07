@@ -13,7 +13,7 @@ class UserRepository {
   async findAll() {
   return await this.repo.find(); // removes the isDeleted filter
 
-}
+  }
 
 
   async findById(id) {
@@ -24,6 +24,16 @@ class UserRepository {
     if (!user) return null;
     this.repo.merge(user, data);
     return await this.repo.save(user);
+  }
+  async find(condition) {
+  return await this.repo.find(condition);
+  }
+
+  async softDelete(id) {
+  const user = await this.repo.findOneBy({ id });
+  if (!user) return null;
+  user.isDeleted = true;
+  return await this.repo.save(user);
   }
  
 

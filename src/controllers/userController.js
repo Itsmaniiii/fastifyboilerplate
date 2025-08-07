@@ -12,13 +12,14 @@ const createUser = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
   try {
-    const users = await userService.getAllUsers();
+    const users = await userService.findAll(); // ✅ Corrected function name
     res.code(200).send(users);
   } catch (error) {
     console.error("Get Users Error:", error);
     res.code(500).send({ error: "Failed to get users" });
   }
 };
+
 
 
 const getUserById = async (req, res) => {

@@ -7,7 +7,7 @@ class UserService {
   }
 
   async findAll() {
-  return await this.repo.find({ where: { isDeleted: false } });
+  return await userRepo.find({ where: { isDeleted: false } });
 }
 
 
