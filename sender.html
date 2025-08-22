@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8" /><title>Sender</title></head>
+<body>
+  <h2>Sender Screen</h2>
+  <label>Your User ID:</label>
+  <input id="senderId" placeholder="Sender ID" />
+  <br /><br />
+  <label>Receiver ID:</label>
+  <input id="receiverId" placeholder="Receiver ID" />
+  <br /><br />
+  <label>Message:</label>
+  <input id="messageInput" placeholder="Type a message" />
+  <button id="sendBtn">Send</button>
+
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <script>
+    const socket = io("http://localhost:3000");
+
+    socket.on("connect", () => {
+      console.log("Connected as sender", socket.id);
+    });
+
+    document.getElementById("sendBtn").addEventListener("click", () => {
+      const senderId = document.getElementById("senderId").value.trim();
+      const receiverId = document.getElementById("receiverId").value.trim();
+      const content = document.getElementById("messageInput").value.trim();
+
+      if (!senderId || !receiverId || !content) {
+        alert("Fill all fields");
+        return;
+      }
+
+      socket.emit("send_message", { senderId, receiverId, content });
+      document.getElementById("messageInput").value = "";
+    });
+  </script>
+</body>
+</html>

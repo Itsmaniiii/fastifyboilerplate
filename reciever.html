@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8" /><title>Receiver</title></head>
+<body>
+  <h2>Receiver Screen</h2>
+  <label>Your User ID:</label>
+  <input id="receiverId" placeholder="Receiver ID" />
+  <button id="connectBtn">Connect</button>
+
+  <h3>Incoming Messages:</h3>
+  <div id="chatBox" style="border:1px solid #ccc; width:300px; height:200px; overflow-y:scroll;"></div>
+
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <script>
+    let socket;
+
+    document.getElementById("connectBtn").addEventListener("click", () => {
+      const receiverId = document.getElementById("receiverId").value.trim();
+      if (!receiverId) {
+        alert("Enter your User ID");
+        return;
+      }
+
+      socket = io("http://localhost:3000");
+
+      socket.on("connect", () => {
+        console.log("Connected as receiver", socket.id);
+        // Tell server this socket is for this receiverId by joining a room
+        socket.emit("join_room", receiverId);
+      });
+
+      socket.on("receive_message", (data) => {
+        const chatBox = document.getElementById("chatBox");
+        const msg = document.createElement("div");
+        msg.textContent = `From ${data.senderId}: ${data.content}`;
+        chatBox.appendChild(msg);
+      });
+    });
+  </script>
+</body>
+</html>

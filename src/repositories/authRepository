@@ -1,0 +1,8 @@
+const dataSource = require('../../Infrastructure/postgres');
+
+const findUserByEmail = async (email) => {
+  const userRepo = dataSource.getRepository('User');
+  return await userRepo.findOne({ where: { email, isDeleted: false } });
+};
+
+module.exports = { findUserByEmail };

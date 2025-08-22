@@ -1,8 +1,20 @@
 const userService = require('../services/userService');
+const bcrypt = require('bcrypt');
 
 const createUser = async (req, res) => {
   try {
-    const user = await userService.createUser(req.body);
+    const { name, email, password } = req.body;
+
+    // Hash the password before storing
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Send all required fields
+    const user = await userService.createUser({
+      name,
+      email,
+      password: hashedPassword,
+    });
+
     res.code(201).send(user);
   } catch (error) {
     console.log("Create User Error:", error);
@@ -37,16 +49,30 @@ const getUserById = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const updatedUser = await userService.updateUser(req.params.id, req.body);
+    const { password, ...otherData } = req.body;
+
+    let updatedData = { ...otherData };
+
+    // If password is provided, hash it
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      updatedData.password = hashedPassword;
+    }
+
+    const updatedUser = await userService.updateUser(req.params.id, updatedData);
+
     if (!updatedUser) {
       return res.code(404).send({ error: "User not found" });
     }
+
     res.code(200).send(updatedUser);
   } catch (error) {
     console.error("Update User Error:", error);
     res.code(500).send({ error: "Failed to update user" });
   }
 };
+
+
 const deleteUser = async (req, res) => {
   try {
     const result = await userService.deleteUser(req.params.id);
@@ -60,6 +86,26 @@ const deleteUser = async (req, res) => {
   }
 };
 
+
+const loginUser = async (req, reply) => {
+  try {
+    const { name, email, password } = req.body;
+
+    const result = await userService.loginUser(name, email, password);
+    if (result.success) {
+      reply.code(200).send({
+        message: 'Login successful',
+        token: result.token,
+        user: result.user
+      });
+    } else {
+      reply.code(401).send({ message: 'Login failed: ' + result.message });
+    }
+  } catch (err) {
+    console.error('Login Error:', err);
+    reply.code(500).send({ message: 'Internal Server Error' });
+  }
+};
 
 
 

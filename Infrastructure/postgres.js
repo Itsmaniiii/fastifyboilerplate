@@ -2,7 +2,7 @@ const { DataSource } = require('typeorm');
 const path = require('path');
 require('dotenv').config();
 
-const { PinoLogger, logger } = require('./logger.js');
+const { PinoLogger } = require('./logger.js');
 
 const dataSource = new DataSource({
   type: process.env.DB_DIALECT || 'postgres',
@@ -14,7 +14,11 @@ const dataSource = new DataSource({
   synchronize: true,
   logging: true,
   logger: new PinoLogger(),
-  entities: [path.join(__dirname, '../src/entities/userEntity.js')], // ✅ picks up userEntity.js and others
+  entities: [
+  path.join(__dirname, '../src/entities/userEntity.js'),
+  path.join(__dirname, '../src/entities/messageEntity.js'),
+],
+
 });
 
 module.exports = dataSource;
